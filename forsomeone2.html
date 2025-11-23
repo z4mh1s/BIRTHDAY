@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday, Darling! — Enhanced</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* RESET */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(135deg,#ffdde1,#ee9ca7,#a18cd1,#fbc2eb);
+      background-size:300% 300%;
+      animation:bgShift 12s ease-in-out infinite;
+      color:#fff;
+      overflow-x:hidden;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+    @keyframes bgShift{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+
+    /* INTRO OVERLAY */
+    .intro {
+      position:fixed;inset:0;background:rgba(10,10,20,0.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:9999;
+      transition:opacity .5s ease,transform .5s ease;
+    }
+    .intro-card{background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));padding:28px;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.4);max-width:420px;text-align:center}
+    .intro h2{font-family:'Dancing Script',cursive;font-size:2.4rem;margin-bottom:8px}
+    .intro p{opacity:.9;margin-bottom:18px}
+    .btn{background:#fff;color:#222;padding:10px 18px;border-radius:10px;border:none;font-weight:600;cursor:pointer}
+
+    /* LAYOUT */
+    .card{width:100%;max-width:980px;background:rgba(255,255,255,0.04);border-radius:18px;padding:28px;box-shadow:0 12px 40px rgba(0,0,0,0.35);position:relative;z-index:2}
+    header{display:flex;gap:18px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+    h1{font-family:'Dancing Script',cursive;font-size:2.6rem;color:#fff;text-shadow:0 6px 20px rgba(0,0,0,0.35)}
+
+    /* TYPEWRITER */
+    .typewriter{display:block;margin:10px 0;font-size:1.12rem;max-width:780px;line-height:1.5;color:rgba(255,255,255,0.95);}
+    .typewriter .wrap{border-right:3px solid rgba(255,255,255,0.7);padding-right:6px;white-space:nowrap;overflow:hidden}
+
+    /* GRID */
+    .grid{display:grid;grid-template-columns:1fr 420px;gap:22px;margin-top:18px;align-items:start}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+    /* CAROUSEL */
+    .photo-carousel{width:100%;height:320px;border-radius:14px;overflow:hidden;position:relative}
+    .carousel-inner{display:flex;width:400%;height:100%;animation:rotate 14s linear infinite}
+    @keyframes rotate{0%{transform:translateX(0)}25%{transform:translateX(-100%)}50%{transform:translateX(-200%)}75%{transform:translateX(-300%)}100%{transform:translateX(0)}}
+    .carousel-inner img{width:100%;height:100%;object-fit:cover}
+
+    /* AUDIO + VISUALIZER */
+    .audio-area{display:flex;flex-direction:column;gap:12px;align-items:center;padding:12px}
+    audio{width:100%;max-width:420px;border-radius:10px}
+    canvas#audioViz{width:100%;height:120px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);box-shadow:inset 0 2px 8px rgba(0,0,0,0.3)}
+
+    /* GIFT BOX */
+    .gift-wrap{width:180px;height:180px;margin:14px auto;position:relative;cursor:pointer}
+    .box-body{position:absolute;inset:0;background:linear-gradient(180deg,#ff6b81,#ff9f9f);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(0,0,0,0.35);transition:transform .6s cubic-bezier(.2,.9,.2,1)}
+    .box-lid{position:absolute;left:12px;right:12px;height:48px;background:linear-gradient(180deg,#fff3,#ffd1e1);top:-24px;border-radius:10px;transform-origin:center bottom;transition:transform .6s cubic-bezier(.2,.9,.2,1)}
+    .ribbon{position:absolute;left:50%;top:20px;transform:translateX(-50%);width:24px;height:140px;background:#6b3cff;border-radius:8px}
+    .ribbon::after{content:'';position:absolute;left:-28px;top:60px;width:80px;height:24px;background:#6b3cff;border-radius:8px}
+    .gift-open .box-lid{transform:translateY(-90px) rotate(-15deg)}
+    .gift-open .box-body{transform:translateY(60px) rotate(-6deg)}
+
+    /* REVEAL MESSAGE */
+    .secret{max-width:320px;margin:8px auto;padding:14px;background:rgba(255,255,255,0.03);border-radius:12px;opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease}
+    .secret.visible{opacity:1;transform:translateY(0)}
+
+    /* CURSOR SPARKLES */
+    .spark{position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;opacity:0.95;transform:translate(-50%,-50%);mix-blend-mode:screen}
+
+    /* CONFETTI */
+    .confetti-piece{position:fixed;width:10px;height:14px;opacity:0;pointer-events:none}
+
+    footer{margin-top:18px;text-align:center;font-size:.9rem;color:rgba(255,255,255,0.85)}
+
+    @media(max-width:520px){h1{font-size:1.8rem}.photo-carousel{height:200px}.grid{gap:12px}}
+  </style>
+</head>
+<body>
+
+  <!-- INTRO -->
+  <div class="intro" id="intro">
+    <div class="intro-card">
+      <h2>Surprise!</h2>
+      <p>Click <strong>Start</strong></p>
+      <button class="btn" id="startBtn">Start</button>
+    </div>
+  </div>
+
+  <div class="card" id="mainCard" aria-hidden="true">
+    <header>
+      <h1>Happy Birthday, Darling! 🎂</h1>
+      <div style="text-align:right">
+        <small>with love 💖</small>
+      </div>
+    </header>
+
+    <div class="typewriter" id="typewriter">
+      <span class="wrap" id="twText"></span>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="photo-carousel" aria-hidden="false">
+          <div class="carousel-inner">
+            <img src="2.jpg.jpeg" alt="memory 1">
+            <img src="4.jpg.jpeg" alt="memory 2">
+            <img src="3.jpg.jpeg" alt="memory 3">
+            <img src="1.jpg.jpeg" alt="memory 4">
+          </div>
+        </div>
+
+        <p style="opacity:.95;margin-top:12px">Tap the gift to open a secret message. Click anywhere for a small firework burst.</p>
+
+        <div class="gift-wrap" id="gift" title="Open gift">
+          <div class="box-lid" aria-hidden="true"></div>
+          <div class="ribbon" aria-hidden="true"></div>
+          <div class="box-body" aria-hidden="true"></div>
+        </div>
+
+        <div class="secret" id="secret">Surprise! You are my favorite person and every day with you is a celebration. Here's to more adventures together. 🎉💖</div>
+      </div>
+
+      <aside>
+        <div class="audio-area">
+          <audio id="player" controls preload="auto">
+            <source src="bestpart.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+          <canvas id="audioViz" width="600" height="120"></canvas>
+        </div>
+      </aside>
+    </div>
+
+    <footer>Made with ❤️</footer>
+  </div>
+
+  <!-- INTERACTIVE LAYERS -->
+  <div id="sparkLayer"></div>
+  <div id="confettiLayer"></div>
+
+  <script>
+    // --------------------------- INITIAL SETUP ---------------------------
+    const intro = document.getElementById('intro');
+    const startBtn = document.getElementById('startBtn');
+    const mainCard = document.getElementById('mainCard');
+    const player = document.getElementById('player');
+
+    startBtn.addEventListener('click', () => {
+      intro.style.opacity = '0';
+      intro.style.transform = 'scale(.98)';
+      setTimeout(()=>{intro.style.display='none'; mainCard.removeAttribute('aria-hidden')},500);
+      // Try to play audio (may be blocked by browser without gesture)
+      player.play().catch(()=>{});
+    });
+
+    // --------------------------- TYPEWRITER ---------------------------
+    const twText = document.getElementById('twText');
+    const message = "You make the world brighter just by being in it — today is a celebration of you, your light, and the joy you bring to everyone around you. I love you endlessly. 💖";
+    let twIndex=0;
+    function typeNext(){
+      if(twIndex<=message.length){
+        twText.textContent = message.slice(0,twIndex);
+        twIndex++;
+        setTimeout(typeNext,28);
+      }
+    }
+    // Start typewriter after intro closed or immediately if intro hidden
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // Wait for user to start to begin typing (UX)
+    });
+    startBtn.addEventListener('click', ()=>{ setTimeout(typeNext,400); });
+
+    // --------------------------- GIFT OPEN ---------------------------
+    const gift = document.getElementById('gift');
+    const secret = document.getElementById('secret');
+    let opened=false;
+    gift.addEventListener('click', (e)=>{
+      if(opened) return;
+      opened=true;
+      gift.classList.add('gift-open');
+      // show confetti pieces
+      spawnConfetti(e.clientX, e.clientY, 36);
+      setTimeout(()=>{ secret.classList.add('visible'); secret.scrollIntoView({behavior:'smooth',block:'center'}) },450);
+    });
+
+    // --------------------------- CONFETTI ---------------------------
+    const confettiLayer = document.getElementById('confettiLayer');
+    function spawnConfetti(x,y,count){
+      for(let i=0;i<count;i++){
+        const el = document.createElement('div');
+        el.className='confetti-piece';
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.background = `linear-gradient(180deg, ${randColor()}, ${randColor()})`;
+        el.style.transform = `translate(0,0) rotate(${Math.random()*360}deg)`;
+        confettiLayer.appendChild(el);
+        // animate
+        const vx = (Math.random()-0.5)*600;
+        const vy = - (200 + Math.random()*500);
+        const rot = (Math.random()-0.5)*720;
+        const duration = 1500 + Math.random()*1000;
+        el.animate([
+          {transform:`translate(0px,0px) rotate(0deg)`,opacity:1},
+          {transform:`translate(${vx}px, ${vy}px) rotate(${rot}deg)`,opacity:1},
+          {transform:`translate(${vx*1.1}px, ${vy+400}px) rotate(${rot*1.4}deg)`,opacity:0}
+        ],{duration:duration,easing:'cubic-bezier(.2,.7,.2,1)'});
+        setTimeout(()=>el.remove(),duration+100);
+      }
+    }
+    function randColor(){ const colors=['#ff6b6b','#ffd93d','#6bcf7f','#4d96ff','#ff9ff3']; return colors[Math.floor(Math.random()*colors.length)]; }
+
+    // --------------------------- CLICK FIREWORKS ---------------------------
+    document.addEventListener('click', (e)=>{
+      // ignore clicks on gift (handled)
+      if(e.target.closest('#gift')) return;
+      spawnFirework(e.clientX,e.clientY);
+    });
+    function spawnFirework(cx,cy){
+      const count=18;
+      for(let i=0;i<count;i++){
+        const dot = document.createElement('div');
+        dot.className='firework';
+        dot.style.position='fixed'; dot.style.left=cx+'px'; dot.style.top=cy+'px'; dot.style.background=randColor(); dot.style.width='6px'; dot.style.height='6px'; dot.style.borderRadius='50%'; dot.style.pointerEvents='none';
+        document.body.appendChild(dot);
+        const angle = (Math.PI*2)*(i/count);
+        const dist = 40 + Math.random()*160;
+        const tx = Math.cos(angle)*dist; const ty = Math.sin(angle)*dist;
+        dot.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${tx}px,${ty}px) scale(.4)`,opacity:0}],{duration:800+Math.random()*600,easing:'cubic-bezier(.2,.7,.2,1)'});
+        setTimeout(()=>dot.remove(),1500);
+      }
+    }
+
+    // --------------------------- MUSIC VISUALIZER ---------------------------
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const canvas = document.getElementById('audioViz');
+    const ctx = canvas.getContext('2d');
+    let analyser,source;
+    function connectAudio(){
+      try{
+        if(!analyser){
+          source = audioCtx.createMediaElementSource(player);
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 256;
+          source.connect(analyser);
+          analyser.connect(audioCtx.destination);
+        }
+      }catch(e){console.warn('Audio connect blocked',e)}
+    }
+    player.addEventListener('play', ()=>{
+      if(audioCtx.state === 'suspended') audioCtx.resume();
+      connectAudio();
+      renderFrame();
+    });
+    function renderFrame(){
+      if(!analyser) return;
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyser.getByteFrequencyData(dataArray);
+      const W = canvas.width = canvas.clientWidth*devicePixelRatio;
+      const H = canvas.height = canvas.clientHeight*devicePixelRatio;
+      ctx.clearRect(0,0,W,H);
+      const barWidth = (W / bufferLength)*1.2;
+      let x=0;
+      for(let i=0;i<bufferLength;i++){
+        const v = dataArray[i]/255;
+        const h = v * H * 0.9;
+        ctx.fillStyle = `rgba(${Math.floor(200*v+55)},${Math.floor(120+60*v)},${Math.floor(200-100*v)},0.95)`;
+        ctx.fillRect(x, H - h, barWidth, h);
+        x += barWidth + 1;
+      }
+      requestAnimationFrame(renderFrame);
+    }
+
+    // --------------------------- CURSOR SPARKLES ---------------------------
+    const sparkLayer = document.getElementById('sparkLayer');
+    document.addEventListener('mousemove', (e)=>{
+      createSpark(e.clientX,e.clientY);
+    });
+    function createSpark(x,y){
+      const el = document.createElement('div');
+      el.className='spark';
+      el.style.left = x+'px'; el.style.top = y+'px';
+      el.style.background = randColor();
+      el.style.width = (6 + Math.random()*10) + 'px';
+      el.style.height = (6 + Math.random()*10) + 'px';
+      el.style.borderRadius = Math.random()>0.5?'50%':'20%';
+      el.style.opacity = 1; el.style.transform = 'translate(-50%,-50%) scale(1)';
+      sparkLayer.appendChild(el);
+      const dx = (Math.random()-0.5)*60; const dy = -(20+Math.random()*40);
+      el.animate([{transform:'translate(-50%,-50%) scale(1)',opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.6)`,opacity:0}],{duration:700+Math.random()*400,easing:'cubic-bezier(.2,.7,.2,1)'});
+      setTimeout(()=>el.remove(),1200);
+    }
+
+    // --------------------------- ACCESSIBILITY & TOUCH TWEAKS ---------------------------
+    // On touch devices we start typewriter automatically after opening
+    player.addEventListener('play', ()=>{ if(audioCtx.state === 'suspended') audioCtx.resume(); });
+
+    // resize canvas on window resize
+    window.addEventListener('resize', ()=>{ if(analyser) renderFrame(); });
+
+    // small UX: ensure typewriter begins if user presses start via keyboard
+    startBtn.addEventListener('keydown', (e)=>{ if(e.key==='Enter') startBtn.click(); });
+
+    // Make sure audio graph is connected safely when user interacts
+    document.addEventListener('pointerdown', ()=>{ if(audioCtx.state==='suspended') audioCtx.resume(); connectAudio(); });
+
+    // End
+  </script>
+</body>
+</html>
